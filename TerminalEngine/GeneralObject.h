@@ -18,8 +18,12 @@ public:
 	void setPrintOrder();
 
 	// Initializes all of the members of the Object struct
-	ObjectManager::Object& initializeObject(const std::vector<std::string>& objectSprite, const std::array<int, 
-		2>& spawnPoint, const bool screenConfined, int hitPoints = 1);
+	ObjectManager::Object& initializeObject(const std::vector<std::string>& objectSprite, 
+		const std::array<int, 
+		2>& spawnPoint, 
+		const bool screenConfined, 
+		int hitPoints = 1,
+		int objectLayer = 1);
 
 	void deleteObject(const ObjectManager::Object& object);
 

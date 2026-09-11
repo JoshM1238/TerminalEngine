@@ -1,11 +1,61 @@
 #include "Screen.h"
 
 
-// Deals with clearing and re-printing objects to the screen
-void Screen::printScreen() {
+void Screen::printObject(const ObjectManager::Object& object) {
 
 	COORD position;
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	for (size_t row = 0; row < object.objectSprite.size(); row++) {
+
+		if (object.hitbox.rowStartX[row] == -1) { continue; }
+
+		position.X = static_cast<SHORT>(object.coordsXY[0] + object.hitbox.rowStartX[row]);
+		position.Y = static_cast<SHORT>(object.coordsXY[1] + row);
+
+		SetConsoleCursorPosition(console, position);
+
+		std::string line = object.objectSprite[row];
+
+
+		// This finds the position of the non-space characters in the row, and prints them at the correct coordinates
+		for (size_t i = object.hitbox.rowStartX[row]; i <= object.hitbox.rowEndX[row]; i++) {
+			std::cout << line[i];
+		}
+	}
+
+	return;
+}
+
+
+
+void Screen::clearObject(const ObjectManager::Object& object) {
+
+	COORD position;
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	for (size_t row = 0; row < object.objectSprite.size(); row++) {
+
+		if (object.hitbox.rowStartX[row] == -1) { continue; }
+
+		position.X = static_cast<SHORT>(object.previousCoordsXY[0] + object.hitbox.rowStartX[row]);
+		position.Y = static_cast<SHORT>(object.previousCoordsXY[1] + row);
+		SetConsoleCursorPosition(console, position);
+
+		int rowSize = object.hitbox.rowEndX[row] - object.hitbox.rowStartX[row] + 1;
+		std::cout << std::string(rowSize, ' ');
+	}
+	
+	return;
+}
+
+
+
+// Deals with clearing and re-printing objects to the screen
+void Screen::printScreen() {
+
+	
+	
 	
 	for (int key : ObjectManager::printOrder) {
 
@@ -13,47 +63,11 @@ void Screen::printScreen() {
 
 		if (object.hasMoved) {
 
-
-
-
-
-
-			// **********MOVE OBJECT CLEARING TO ITS OWN FUNCTION IN THE SCREEN CLASS, AND THEN JUST CALL THAT HERE**********
 			// Clear all non-space characters
-			for (size_t row = 0; row < object.objectSprite.size(); row++) {
+			clearObject(object);
 
-				if (object.hitbox.rowStartX[row] == -1) { continue; }
-
-				position.X = static_cast<SHORT>(object.previousCoordsXY[0] + object.hitbox.rowStartX[row]);
-				position.Y = static_cast<SHORT>(object.previousCoordsXY[1] + row);
-				SetConsoleCursorPosition(console, position);
-
-				int rowSize = object.hitbox.rowEndX[row] - object.hitbox.rowStartX[row] + 1;
-				std::cout << std::string(rowSize, ' ');
-			}
-
-
-
-
-			// **********MOVE OBJECT PRINTING TO ITS OWN FUNCTION IN THE SCREEN CLASS, AND THEN JUST CALL THAT HERE**********
 			// Re-prints the sprint, in its new position, without printing any unnecessary space characters
-			for (size_t row = 0; row < object.objectSprite.size(); row++) {
-
-				if (object.hitbox.rowStartX[row] == -1) { continue; }
-
-				position.X = static_cast<SHORT>(object.coordsXY[0] + object.hitbox.rowStartX[row]);
-				position.Y = static_cast<SHORT>(object.coordsXY[1] + row);
-
-				SetConsoleCursorPosition(console, position);
-
-				std::string& line = object.objectSprite[row];
-
-
-				// This finds the position of the non-space characters in the row, and prints them at the correct coordinates
-				for (size_t i = object.hitbox.rowStartX[row]; i <= object.hitbox.rowEndX[row]; i++) {
-					std::cout << line[i];
-				}
-			}
+			printObject(object);
 
 			object.hasMoved = false;
 		}

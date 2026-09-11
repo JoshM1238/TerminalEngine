@@ -133,6 +133,7 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="TxtHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="TxtHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

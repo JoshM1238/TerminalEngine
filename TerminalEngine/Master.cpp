@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include "GetHitbox.h"
 #include "GeneralObject.h"
+#include "TxtHandler.h"
 
 #include <iostream>
 #include <vector>
@@ -19,11 +20,11 @@
 
 
 // ********** STOPPED HERE **********
-// ********** OBJECT CLEARING FROM THE SCREEN IS NOT WORKING PROPERLY. FIX THAT NEXT **********
 
-// ADD A CLASS TO PROCESS CONFIG FILES
-// MOVE OBJECT PRINTING AND CLEARING TO THEIR OWN FUNCTIONS IN THE SCREEN CLASS, AND THEN JUST CALL THOSE FUNCTIONS IN THE PRINTSCREEN FUNCTION
-// ADD LAYERS, AND MAKE IT SO THAT OBJECTS THAT PASS OVER EACH OTHER SO NOT GET CLEARED**
+// CHANGE THE PRINTORDER FUNCTIONALITY TO UPDATE ON A SET INTERVAL INSTEAD OF UPDATING EVERY TIME AN OBJECT MOVES
+// ADD A FUNCTION TO THE SCREEN CLASS TO SET THE OUTPUT FONT
+// ADD A FUNCTION TO THE TEXT PARSER CLASS TO PROCESS CONFIG FILES
+// USING THE NEW LAYERS IN THE OBJECT, MAKE IT SO THAT BACKGROUND OBJECTS ARE NOT CLEARED WHEN PASSED OVER UNLESS THEY NEED TO BE
 
 void Master::run(){
 
@@ -34,6 +35,7 @@ void Master::run(){
 	PlayerObject playerObject;
 	GeneralObject object;
 	Controller control;
+	TxtHandler parser;
 	
 	Controller::Controls movementButtons = control.setControls('W', 'S', 'A', 'D');   // ********** MOVE THESE SETTINGS INTO A CONFIG FILE LATER **********
 
@@ -44,29 +46,9 @@ void Master::run(){
 
 	screen.hideCursor();
 
-	std::vector<std::string> playerSprite = {   // ***** MOVE THIS INTO A SPRITE FILE AFTER CREATING A GET SPRITE CLASS *****
-		"  *  ",
-		" *** ",
-		"*****"
-	};
+	std::vector<std::string> playerSprite = parser.parseSprite("../Sprites/PlayerSprite.txt");
+	std::vector<std::string> enemySprite = parser.parseSprite("../Sprites/EnemySprite.txt");
 
-
-
-
-
-
-
-
-
-
-	// ********** THIS NEEDS REMOVED AFTER TESTING**********
-	std::vector<std::string> enemySprite = {
-		"    *    ",
-		"   * *   ",
-		"***   ***",
-		" **   ** ",
-		"*       *"
-	};
 
 	std::array<int, 2> enemySpawn{ 30, 7 };
 	ObjectManager::Object& enemy = object.initializeObject(enemySprite, enemySpawn, true);
@@ -85,7 +67,7 @@ void Master::run(){
 	while (isRunning) {
 
 		// Temporary: (Only print 100000000000 frames)
-		if (frameCount >= 10) {
+		if (frameCount >= 100000000000000) {
 			isRunning = false;
 		}
 
@@ -113,14 +95,11 @@ void Master::run(){
 		screen.printScreen();
 
 		// ********** STOPPED HERE **********
-		// ********** OBJECT CLEARING FROM THE SCREEN IS NOT WORKING PROPERLY. FIX THAT NEXT **********
-		// ALSO FIX HOW OBJECTS ARE BEING INITIALIZED (LOOK AT HOW THE PLAYER OBJECT IS CURRENTLY CREATED ABOVE. IT IS INCORRECT)
 
-		// ADD A CLASS TO PROCESS CONFIG FILES
-		// MOVE OBJECT PRINTING AND CLEARING TO THEIR OWN FUNCTIONS IN THE SCREEN CLASS, AND THEN JUST CALL THOSE FUNCTIONS IN THE PRINTSCREEN FUNCTION
-		// ADD LAYERS, AND MAKE IT SO THAT OBJECTS THAT PASS OVER EACH OTHER SO NOT GET CLEARED**
-
-
+		// CHANGE THE PRINTORDER FUNCTIONALITY TO UPDATE ON A SET INTERVAL INSTEAD OF UPDATING EVERY TIME AN OBJECT MOVES
+		// ADD A FUNCTION TO THE SCREEN CLASS TO SET THE OUTPUT FONT
+		// ADD A FUNCTION TO THE TEXT PARSER CLASS TO PROCESS CONFIG FILES
+		// USING THE NEW LAYERS IN THE OBJECT, MAKE IT SO THAT BACKGROUND OBJECTS ARE NOT CLEARED WHEN PASSED OVER UNLESS THEY NEED TO BE
 
 
 

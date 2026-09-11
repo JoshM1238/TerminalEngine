@@ -13,6 +13,10 @@ class Screen {
 
 public:
 
+	void printObject(const ObjectManager::Object& object);
+
+	void clearObject(const ObjectManager::Object& object);
+
 	void printScreen();   // clear the necessary objects and reprint them in their new positions
 
 	void frameRate(const int& milPerFrame);   // set frames per second (usefull because the terminal looks bad at extremely high frame rates)

@@ -34,8 +34,13 @@ void GeneralObject::setPrintOrder() {
 
 
 // Initializes all values of the Object struct for the passed in object
-ObjectManager::Object& GeneralObject::initializeObject(const std::vector<std::string>& objectSprite, const std::array<int, 
-	2>& spawnPoint, const bool screenConfined, int hitPoints) {
+ObjectManager::Object& GeneralObject::initializeObject(
+	const std::vector<std::string>& objectSprite, 
+	const std::array<int, 
+	2>& spawnPoint, 
+	const bool screenConfined, 
+	int hitPoints,
+	int objectLayer) {
 
 	ObjectManager::Object object;
 	const Screen::ScreenDimensions& screen = Screen::getScreenSize();
@@ -45,6 +50,7 @@ ObjectManager::Object& GeneralObject::initializeObject(const std::vector<std::st
 	object.hasMoved = true;   // initialize to true so that it is printed the first time
 	object.screenConfined = screenConfined;   // is the object confined to the dimensions of the screen? For instance, the player object probably is
 	object.hitPoints = hitPoints;
+	object.objectLayer = objectLayer;
 
 	if (spawnPoint[0] > screen.playableScreenEnd) { object.spawnPoint[0] = screen.playableScreenEnd; }
 	else if (spawnPoint[0] < screen.playableScreenStart) { object.spawnPoint[0] = screen.playableScreenStart; }

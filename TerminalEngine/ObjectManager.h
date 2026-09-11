@@ -21,6 +21,7 @@ public:
 		bool hasMoved;
 		int objectID;
 		int hitPoints;
+		int objectLayer;
 	};
 
 	static std::unordered_map<int, Object> objectList;
