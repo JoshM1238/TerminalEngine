@@ -10,3 +10,9 @@ bool GameClock::checkElapsedMills(const Clock::time_point& pointA, const Clock::
 
 	return false;
 }
+
+// Returns the timepoint at which this was called
+long long GameClock::now() {
+	std::chrono::steady_clock::time_point timePoint = std::chrono::steady_clock::now();
+	return std::chrono::duration_cast<std::chrono::milliseconds>(timePoint.time_since_epoch()).count();
+}

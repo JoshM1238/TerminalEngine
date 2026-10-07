@@ -1,43 +1,9 @@
 #include "GeneralObject.h"
 
-
-void GeneralObject::setPrintOrder() {
-
-	std::vector<int> order;   // will store the keys of the objectList unordered map in the order that their objects should be printed
-	order.reserve(ObjectManager::objectList.size());
-
-	for (const auto& element : ObjectManager::objectList) {
-		order.push_back(element.first);
-	}
-
-	std::sort(order.begin(), order.end(), [this](int firstKey, int secondKey) {
-
-		int firstY = ObjectManager::objectList.at(firstKey).coordsXY[1];
-		int secondY = ObjectManager::objectList.at(secondKey).coordsXY[1];
-
-		if (firstY == secondY) {
-			int firstX = ObjectManager::objectList.at(firstKey).coordsXY[0];
-			int secondX = ObjectManager::objectList.at(secondKey).coordsXY[0];
-			return firstX < secondX;
-		}
-
-		return firstY < secondY;
-
-		}
-	);
-
-	ObjectManager::printOrder = order;
-
-	return;
-}
-
-
-
 // Initializes all values of the Object struct for the passed in object
 ObjectManager::Object& GeneralObject::initializeObject(
 	const std::vector<std::string>& objectSprite, 
-	const std::array<int, 
-	2>& spawnPoint, 
+	const std::array<int, 2>& spawnPoint, 
 	const bool screenConfined, 
 	int hitPoints,
 	int objectLayer) {
@@ -71,7 +37,7 @@ ObjectManager::Object& GeneralObject::initializeObject(
 
 	object.objectID = newKey;
 	ObjectManager::objectList.insert({ newKey, object });   // add the new object to the object list with a unique key
-	setPrintOrder();
+	ObjectManager::refreshPrintOrder();
 
 	return ObjectManager::objectList.at(newKey);
 }
@@ -96,14 +62,6 @@ void GeneralObject::deleteObject(const ObjectManager::Object& object) {
 
 
 
-
-
-
-
-
-
-// *************** POSSIBLY CHANGE THIS IN THE FUTURE SO THAT THE PRINT ORDER IN NOT UPDATED WITH EVERY MOVEMENT ***************
-// IT WOULD LIKELY RUN FASTER IF THE PRINT ORDER WAS UPDATED ON A SCHEDULE
 void GeneralObject::moveObject(ObjectManager::Object& object, const std::array<int, 2>& movement, const Screen::ScreenDimensions& screen) {
 
 	int xAmount = movement[0];   // the first element of the movement array is how much the object should move on the X axis
@@ -121,7 +79,7 @@ void GeneralObject::moveObject(ObjectManager::Object& object, const std::array<i
 
 	if (xAmount != 0 || yAmount != 0) { 
 		object.hasMoved = true;
-		setPrintOrder();
+		if (ObjectManager::isTimeToRefreshPrintOrder()) { ObjectManager::refreshPrintOrder(); }
 	}
 
 	else { 
@@ -161,6 +119,5 @@ void GeneralObject::moveObject(ObjectManager::Object& object, const std::array<i
 	return;
 }
 
-// *************** POSSIBLY CHANGE THIS IN THE FUTURE SO THAT THE PRINT ORDER IS NOT UPDATED WITH EVERY MOVEMENT ***************
-// IT WOULD LIKELY RUN FASTER IF THE PRINT ORDER WAS UPDATED ON A SCHEDULE
+
 
